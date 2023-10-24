@@ -8,7 +8,7 @@ const router = express();
 
 
 router.get('/get-product', productsListController)
-router.get('/get-product/:id', singleProductController)
+router.get('/get-product/:slug', singleProductController)
 
 router.post('/create-product', formidable(), createProductController)
 

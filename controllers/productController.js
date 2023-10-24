@@ -17,8 +17,8 @@ export const productsListController = async (req, res) => {
 
 export const singleProductController = async (req, res) => {
     try {
-        const { id } = req.params;
-        const product = await productModel.findById(id)
+        const { slug } = req.params;
+        const product = await productModel.findOne({ slug })
         if (!product) {
             return res.send({ error: 'No products found!' })
         }
