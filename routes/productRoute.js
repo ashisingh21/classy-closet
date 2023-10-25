@@ -1,13 +1,13 @@
 import express from 'express'
 import formidable from 'express-formidable'
-import { createProductController, deleteAllProductController, deleteProductController, filterProductController, productPhotoController, productsListController, singleProductController, updateProductController } from '../controllers/productController.js'
+import { allProductController, createProductController, deleteAllProductController, deleteProductController, filterProductController, productCountController, productListController, productPhotoController, singleProductController, updateProductController } from '../controllers/productController.js'
 
 const router = express();
 
 
 
 
-router.get('/get-product', productsListController)
+router.get('/get-product', allProductController)
 
 router.get('/product-photo/:id', productPhotoController)
 
@@ -23,6 +23,10 @@ router.delete('/delete-product/:id', deleteProductController)
 router.delete('/delete-all-products', deleteAllProductController)
 
 router.post('/filter-products', filterProductController)
+
+router.get('/product-count', productCountController);
+
+router.get('/product-list/:page', productListController);
 
 
 

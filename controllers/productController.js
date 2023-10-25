@@ -1,7 +1,7 @@
 import productModel from "../models/productModel.js";
 import fs from "fs";
 
-export const productsListController = async (req, res) => {
+export const allProductController = async (req, res) => {
     try {
         const products = await productModel.find({}).populate("category").select("-photo");
         if (!products) {
@@ -157,6 +157,29 @@ export const filterProductController = async (req, res) => {
 
         return res.status(200).send({ success: true, message: 'Products deleted successfully', product })
 
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ error, message: 'Server error' });
+    }
+}
+
+export const productCountController = async (req, res) => {
+    try {
+        const count = await productModel.find({}).estimatedDocumentCount();
+        return res.status(200).send({ success: true, message: 'Products count fetched successfully', count })
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ error, message: 'Server error' });
+    }
+}
+
+export const productListController = async (req, res) => {
+    try {
+        const pageCount = 1;
+        const page = req.params.page ? req.params.page : 1;
+        const products = await productModel.find({}).select("-photo").skip((page - 1) * pageCount).limit(pageCount).sort({ createdAt: -1 })
+        return res.status(200).send({ success: true, message: 'Products fetched successfully', products })
     } catch (error) {
         console.error(error);
         return res.status(500).send({ error, message: 'Server error' });
