@@ -3,7 +3,7 @@ import fs from "fs";
 
 export const productsListController = async (req, res) => {
     try {
-        const products = await productModel.find({}).populate("category")
+        const products = await productModel.find({}).populate("category").select("-photo");
         if (!products) {
             return res.send({ error: 'No products found!' })
         }
@@ -15,6 +15,7 @@ export const productsListController = async (req, res) => {
     }
 }
 
+
 export const singleProductController = async (req, res) => {
     try {
         const { slug } = req.params;
@@ -22,7 +23,29 @@ export const singleProductController = async (req, res) => {
         if (!product) {
             return res.send({ error: 'No products found!' })
         }
+        if (product.photo.data) {
+            res.set('name', product.slug)
+        }
         return res.status(200).send({ success: true, message: 'Product fetched successfully', product })
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ error: 'Internal Server Error' });
+    }
+}
+
+
+
+export const productPhotoController = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const product = await productModel.findById(id).select('photo');
+        if (product.photo.data) {
+            res.set('Content-type', product.photo.contentType)
+            return res.status(200).send(product.photo.data)
+        }
+
+
 
     } catch (error) {
         console.error(error);
@@ -63,7 +86,8 @@ export const updateProductController = async (req, res) => {
         const { name, description, category, price, slug, quantity, shipping } = req.fields;
         const { photo } = req.files;
 
-        if (!name || !description || !category || !price || !slug || !quantity || !photo || !shipping) return res.send({ error: 'Please fill all fields.' })
+
+        if (!name || !description || !category || !price || !slug || !quantity || !shipping) return res.send({ error: 'Please fill all fields.' })
 
         // check for existing product
 
@@ -111,6 +135,27 @@ export const deleteAllProductController = async (req, res) => {
 
 
         if (product) return res.status(200).send({ success: true, message: 'Products deleted successfully' })
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ error, message: 'Server error' });
+    }
+}
+
+// filter controller
+
+export const filterProductController = async (req, res) => {
+    try {
+
+        const { checked, radio } = req.body
+
+        let args = {}
+        if (checked.length > 0) args.category = checked;
+
+        if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
+        const product = await productModel.find(args).populate("category")
+
+        return res.status(200).send({ success: true, message: 'Products deleted successfully', product })
 
     } catch (error) {
         console.error(error);
