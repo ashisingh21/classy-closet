@@ -176,10 +176,30 @@ export const productCountController = async (req, res) => {
 
 export const productListController = async (req, res) => {
     try {
-        const pageCount = 1;
+        const pageCount = 3;
         const page = req.params.page ? req.params.page : 1;
-        const products = await productModel.find({}).select("-photo").skip((page - 1) * pageCount).limit(pageCount).sort({ createdAt: -1 })
+        const products = await productModel.find({}).populate("category").select("-photo").skip((page - 1) * pageCount).limit(pageCount).sort({ createdAt: -1 })
         return res.status(200).send({ success: true, message: 'Products fetched successfully', products })
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ error, message: 'Server error' });
+    }
+}
+
+export const searchProductController = async (req, res) => {
+
+    try {
+
+        const { keyword } = req.params;
+        const result = await productModel.find({
+            $or: [
+                { "name": { $regex: keyword, $options: 'i' } },
+                { "description": { $regex: keyword, $options: 'i' } },
+            ]
+
+        }).select("-photo");
+        return res.status(200).send({ success: true, message: 'Products fetched successfully', result })
+
     } catch (error) {
         console.error(error);
         return res.status(500).send({ error, message: 'Server error' });
