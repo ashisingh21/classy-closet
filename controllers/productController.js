@@ -205,3 +205,17 @@ export const searchProductController = async (req, res) => {
         return res.status(500).send({ error, message: 'Server error' });
     }
 }
+
+export const similarProductController = async (req, res) => {
+
+    try {
+        const { slug } = req.params;
+        const currentProduct = await productModel.findOne({ slug }).select("-photo");
+        const products = await productModel.find({ category: currentProduct.category, _id: { $ne: currentProduct._id } }).populate("category");
+        return res.status(200).send({ success: true, message: 'Products fetched successfully', products })
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ error, message: 'Server error' });
+    }
+}
