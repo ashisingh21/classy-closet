@@ -19,7 +19,7 @@ export const allProductController = async (req, res) => {
 export const singleProductController = async (req, res) => {
     try {
         const { slug } = req.params;
-        const product = await productModel.findOne({ slug })
+        const product = await productModel.findOne({ slug }).populate("category")
         if (!product) {
             return res.send({ error: 'No products found!' })
         }
