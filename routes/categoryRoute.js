@@ -19,5 +19,4 @@ router.delete('/delete-all-category', deleteAllCategoryController)
 
 
 
-
 export default router;
