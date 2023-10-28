@@ -20,7 +20,7 @@ export const allProductController = async (req, res) => {
 export const singleProductController = async (req, res) => {
     try {
         const { slug } = req.params;
-        const product = await productModel.findOne({ slug }).populate("category")
+        const product = await productModel.findOne({ slug })
         if (!product) {
             return res.send({ error: 'No products found!' })
         }
@@ -45,14 +45,12 @@ export const productPhotoController = async (req, res) => {
             res.set('Content-type', product.photo.contentType)
             return res.status(200).send(product.photo.data)
         }
-
-
-
     } catch (error) {
         console.error(error);
         return res.status(500).send({ error: 'Internal Server Error' });
     }
 }
+
 
 export const createProductController = async (req, res) => {
     try {

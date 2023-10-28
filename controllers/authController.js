@@ -114,3 +114,25 @@ export const deleteUserController = async (req, res) => {
     }
 }
 
+export const updateProfileController = async (req, res) => {
+    try {
+        const { name, email, password, address, phone } = req.body;
+
+        const currentUser = await userModel.findOne({ email });
+
+        const hashedPassword = password ? await hashPassword(password) : undefined;
+
+        const user = await userModel.findByIdAndUpdate(currentUser._id, {
+            name: name || currentUser.name, email: email || currentUser.email, password: hashedPassword || currentUser.password, address: address || currentUser.address, phone: phone || currentUser.phone
+        }, { new: true });
+
+        if (!user) {
+            return res.status(404).send({ success: false, message: 'User not found.' });
+        }
+        return res.status(201).send({ success: true, message: 'Profile updated successfully!', user });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ success: false, message: 'Oops! Profile update failed!', error: error.message });
+    }
+}

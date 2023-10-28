@@ -1,5 +1,5 @@
 import express from "express";
-import { registerController, loginController, forgotPassword, allUsersController, deleteUserController } from '../controllers/authController.js'
+import { registerController, loginController, forgotPassword, allUsersController, deleteUserController, updateProfileController } from '../controllers/authController.js'
 import { isAdmin, isSignin } from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
@@ -24,6 +24,8 @@ router.get('/admin-auth', isSignin, isAdmin, (req, res) => {
 router.get('/all-user', allUsersController)
 
 router.delete('/delete-user/:id', deleteUserController)
+
+router.put('/update', updateProfileController)
 
 
 export default router;
