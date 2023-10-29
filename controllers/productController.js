@@ -280,7 +280,7 @@ export const braintreePaymentController = async (req, res) => {
             }, function (err, result) {
                 if (result) {
                     const order = new orderModel({
-                        product: cart,
+                        products: cart,
                         payment: result,
                         buyer: user,
 

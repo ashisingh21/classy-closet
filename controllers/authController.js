@@ -2,6 +2,7 @@ import userModel from '../models/userModel.js'
 import dotenv from 'dotenv'
 import { hashPassword, comparePassword } from '../helpers/authHelper.js'
 import JWT from 'jsonwebtoken'
+import orderModel from '../models/orderModel.js';
 
 dotenv.config();
 
@@ -134,5 +135,28 @@ export const updateProfileController = async (req, res) => {
     } catch (error) {
         console.error(error);
         return res.status(500).send({ success: false, message: 'Oops! Profile update failed!', error: error.message });
+    }
+}
+
+export const orderDataController = async (req, res) => {
+    try {
+        const { id } = req.query;
+        const orders = await orderModel.find({ buyer: id }).populate("products", "-photo").populate("buyer", "name");
+        // res.json(orders);
+        return res.status(201).send({ success: true, message: 'order fetched successfully!', orders });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ success: false, message: 'Error in fetching orders', error: error.message });
+    }
+}
+
+export const orderAdminDataController = async (req, res) => {
+    try {
+        const orders = await orderModel.find().populate("products", "-photo").populate("buyer", "name").sort({ createdAt: "-1" });
+        // res.json(orders);
+        return res.status(201).send({ success: true, message: 'order fetched successfully!', orders });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ success: false, message: 'Error in fetching orders', error: error.message });
     }
 }
