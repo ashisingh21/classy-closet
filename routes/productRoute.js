@@ -1,6 +1,6 @@
 import express from 'express'
 import formidable from 'express-formidable'
-import { allProductController, categoryProductController, createProductController, deleteAllProductController, deleteProductController, filterProductController, productCountController, productListController, productPhotoController, searchProductController, similarProductController, singleProductController, updateProductController } from '../controllers/productController.js'
+import { allProductController, braintreePaymentController, braintreeTokenController, categoryProductController, createProductController, deleteAllProductController, deleteProductController, filterProductController, productCountController, productListController, productPhotoController, searchProductController, similarProductController, singleProductController, updateProductController } from '../controllers/productController.js'
 
 const router = express();
 
@@ -33,6 +33,9 @@ router.get('/product-search/:keyword', searchProductController);
 router.get('/product-similar/:slug', similarProductController);
 
 router.get('/category/:slug', categoryProductController);
+
+router.get('/braintree/token', braintreeTokenController)
+router.post('/braintree/payment', braintreePaymentController)
 
 
 
