@@ -34,12 +34,9 @@ app.use(morgan('dev'))
 
 
 
-app.use(express.static(path.join(__dirname, 'client', 'build')));
+app.use(express.static(path.join(__dirname, './client/build')));
 
-app.use('*', function (req, res) {
-    const index =
-        res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-});
+
 
 const PORT = process.env.PORT || 8080;
 
@@ -51,7 +48,10 @@ app.use('/api/v1/category', categoryRoute)
 
 app.use('/api/v1/product', productRoute)
 
-
+app.use('*', function (req, res) {
+    const index = path.join(__dirname, './client/build/index.html')
+    res.sendFile(index);
+});
 
 
 app.listen(PORT, () => {
