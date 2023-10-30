@@ -9,6 +9,7 @@
     "client": "npm start --prefix ./client",
     "start":"node server.js",
     "server": "nodemon server.js",
+    "dev2": "concurrently \"npm run client\" \"npm run server\"",
     "dev": "concurrently \"npm run client\" \"npm run start\""
   },
   "keywords": [],
