@@ -160,3 +160,28 @@ export const orderAdminDataController = async (req, res) => {
         return res.status(500).send({ success: false, message: 'Error in fetching orders', error: error.message });
     }
 }
+
+
+export const orderStatusUpdateController = async (req, res) => {
+    try {
+        // const { id, newStatus } = req.body;
+        // const order = await orderModel.findByIdAndUpdate(id, { status: newStatus })
+        // if (!order) {
+        //     return res.status(404).send({ success: false, message: 'Order not found' });
+        // }
+
+        // approach 2
+
+        const { newStatus } = req.body;
+        const { id } = req.params;
+        const order = await orderModel.findByIdAndUpdate(id, { status: newStatus })
+        if (!order) {
+            return res.status(404).send({ success: false, message: 'Order not found' });
+        }
+
+        return res.status(201).send({ success: true, message: 'order status updated successfully!', order });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ success: false, message: 'Error in Updating status', error: error.message });
+    }
+}
